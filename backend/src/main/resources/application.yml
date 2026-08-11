@@ -1,0 +1,92 @@
+server:
+  port: 18888
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: cs-kaoyan-ai-backend
+  datasource:
+    url: jdbc:h2:file:./data/kaoyan;MODE=MySQL;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=YEAR;AUTO_SERVER=TRUE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+      schema-locations: classpath:schema-h2.sql
+      data-locations: classpath:data-h2.sql
+  flyway:
+    enabled: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+
+logging:
+  level:
+    com.kaoyan.assistant: info
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState,db
+        liveness:
+          include: livenessState
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+
+app:
+  official-link-discovery:
+    allow-fake-ip: ${OFFICIAL_LINK_DISCOVERY_ALLOW_FAKE_IP:false}
+  admin:
+    username: ${ADMIN_USERNAME:admin}
+    password: ${ADMIN_PASSWORD:}
+    editor:
+      username: ${ADMIN_EDITOR_USERNAME:}
+      password: ${ADMIN_EDITOR_PASSWORD:}
+    auditor:
+      username: ${ADMIN_AUDITOR_USERNAME:}
+      password: ${ADMIN_AUDITOR_PASSWORD:}
+    token-ttl-seconds: ${ADMIN_TOKEN_TTL_SECONDS:86400}
+    sync-password-on-startup: ${ADMIN_SYNC_PASSWORD_ON_STARTUP:false}
+  ai:
+    provider: ${AI_PROVIDER:local}
+    agent:
+      endpoint: ${AI_AGENT_ENDPOINT:http://127.0.0.1:18889}
+      timeout-seconds: ${AI_AGENT_TIMEOUT_SECONDS:90}
+      internal-token: ${AGENT_INTERNAL_TOKEN:}
+    external:
+      endpoint: ${AI_EXTERNAL_ENDPOINT:}
+  document:
+    web-monitor:
+      enabled: ${WEB_CAPTURE_MONITOR_ENABLED:false}
+      initial-delay-ms: ${WEB_CAPTURE_MONITOR_INITIAL_DELAY_MS:60000}
+      scan-delay-ms: ${WEB_CAPTURE_MONITOR_SCAN_DELAY_MS:300000}
+      max-per-run: ${WEB_CAPTURE_MONITOR_MAX_PER_RUN:2}
+    ocr:
+      enabled: ${DOCUMENT_OCR_ENABLED:false}
+      command: ${DOCUMENT_OCR_COMMAND:tesseract}
+      language: ${DOCUMENT_OCR_LANGUAGE:chi_sim+eng}
+      max-pages: ${DOCUMENT_OCR_MAX_PAGES:20}
+      page-timeout-seconds: ${DOCUMENT_OCR_PAGE_TIMEOUT_SECONDS:30}

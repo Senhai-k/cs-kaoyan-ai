@@ -1,0 +1,2 @@
+ALTER TABLE admin_user
+  ADD COLUMN role VARCHAR(30) NOT NULL DEFAULT 'ADMIN' AFTER nickname;

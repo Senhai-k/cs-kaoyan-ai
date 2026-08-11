@@ -1,0 +1,225 @@
+[
+  {
+    "id": "xidian-408",
+    "category": "exact_major",
+    "question": "西安电子科技大学081200专业初试科目是什么？",
+    "school": "西安电子科技大学",
+    "expectedText": "408"
+  },
+  {
+    "id": "hust-retest-weight",
+    "category": "numeric_policy",
+    "question": "华中科技大学2026年复试成绩权重是多少？",
+    "school": "华中科技大学",
+    "expectedText": "40%"
+  },
+  {
+    "id": "pku-408",
+    "category": "same_school_disambiguation",
+    "question": "北京大学计算机学院081200是否考408？",
+    "school": "北京大学",
+    "expectedText": "计算机学院"
+  },
+  {
+    "id": "bupt-boundary",
+    "category": "temporal_boundary",
+    "question": "北京邮电大学2027年是否已经确定改考408？",
+    "school": "北京邮电大学",
+    "expectedText": "不能据此判断"
+  },
+  {
+    "id": "bupt-computer-technology",
+    "category": "exact_major",
+    "question": "北京邮电大学计算机学院085404的初试科目是什么？",
+    "school": "北京邮电大学",
+    "expectedText": "085404"
+  },
+  {
+    "id": "pku-shenzhen",
+    "category": "same_school_disambiguation",
+    "question": "北京大学深圳研究生院081200采用什么专业课？",
+    "school": "北京大学",
+    "expectedText": "深圳研究生院"
+  },
+  {
+    "id": "buaa-part-time",
+    "category": "study_mode",
+    "question": "北京航空航天大学软件学院085405是否有非全日制方向？",
+    "school": "北京航空航天大学",
+    "expectedText": "非全日制"
+  },
+  {
+    "id": "bit-big-data",
+    "category": "exact_major",
+    "question": "北京理工大学计算机学院085411的目录记录是什么？",
+    "school": "北京理工大学",
+    "expectedText": "085411"
+  },
+  {
+    "id": "bnu-psychology",
+    "category": "cross_discipline",
+    "question": "北京师范大学心理学部081203采用408吗？",
+    "school": "北京师范大学",
+    "expectedText": "心理学部"
+  },
+  {
+    "id": "cuc-cybersecurity",
+    "category": "exact_major",
+    "question": "中国传媒大学网络空间安全083900的初试科目是什么？",
+    "school": "中国传媒大学",
+    "expectedText": "083900"
+  },
+  {
+    "id": "tianjin-polytechnic-part-time",
+    "category": "study_mode",
+    "question": "天津工业大学软件工程085405是否包含非全日制？",
+    "school": "天津工业大学",
+    "expectedText": "非全日制"
+  },
+  {
+    "id": "heilongjiang-russian",
+    "category": "subject_variant",
+    "question": "黑龙江科技大学081203是否有俄语的目录记录？",
+    "school": "黑龙江科技大学",
+    "expectedText": "202 俄语"
+  },
+  {
+    "id": "inner-mongolia-math-two",
+    "category": "subject_variant",
+    "question": "内蒙古科技大学085407考英语二和数学二吗？",
+    "school": "内蒙古科技大学",
+    "expectedText": "302 数学（二）"
+  },
+  {
+    "id": "uibe-interdisciplinary",
+    "category": "cross_discipline",
+    "question": "对外经济贸易大学140500交叉学科采用408吗？",
+    "school": "对外经济贸易大学",
+    "expectedText": "140500"
+  },
+  {
+    "id": "buct-computer-technology",
+    "category": "subject_variant",
+    "question": "北京化工大学085404计算机技术的数学科目是什么？",
+    "school": "北京化工大学",
+    "expectedText": "302 数学（二）"
+  },
+  {
+    "id": "ncut-cybersecurity",
+    "category": "exact_major",
+    "question": "北方工业大学083900网络空间安全是否采用408？",
+    "school": "北方工业大学",
+    "expectedText": "083900"
+  },
+  {
+    "id": "tjau-software",
+    "category": "subject_variant",
+    "question": "天津农学院085405软件工程的公共课组合是什么？",
+    "school": "天津农学院",
+    "expectedText": "204 英语（二）"
+  },
+  {
+    "id": "yunnan-software-theory",
+    "category": "same_school_disambiguation",
+    "question": "云南大学081202计算机软件与理论是否采用408？",
+    "school": "云南大学",
+    "expectedText": "081202"
+  },
+  {
+    "id": "nanjing-data-boundary",
+    "category": "data_boundary",
+    "question": "南京大学2026年资料是否已经包含具体专业录取分数？",
+    "school": "南京大学",
+    "expectedText": "具体专业数据需打开官方页面核验"
+  },
+  {
+    "id": "sjtu-source-boundary",
+    "category": "data_boundary",
+    "question": "上海交通大学当前入库资料能否直接给出具体专业招生人数？",
+    "school": "上海交通大学",
+    "expectedText": "具体专业分数、计划和录取结果需以栏目内公告为准"
+  },
+  {
+    "id": "unknown-hangzhou-dianzi",
+    "category": "unknown_school_guard",
+    "question": "杭州电子科技大学2026年计算机专业最低录取分是多少？",
+    "expectedGuard": true,
+    "expectedAnswerText": "不执行跨校推断"
+  },
+  {
+    "id": "unknown-southeast-university",
+    "category": "unknown_school_guard",
+    "question": "东南大学085404专业招生人数和复试线是多少？",
+    "expectedGuard": true,
+    "expectedAnswerText": "不执行跨校推断"
+  },
+  {
+    "id": "zju-score-line-long-document",
+    "category": "long_document",
+    "question": "浙江大学计算机学院081200的复试线和差额比例是多少？",
+    "school": "浙江大学",
+    "expectedTexts": ["081200 计算机科学与技术 50 50 75 75 382", "1:1.3的复试比例"],
+    "expectedAnswerTexts": ["382", "1:1.3"]
+  },
+  {
+    "id": "zju-electronic-information-plan",
+    "category": "long_document",
+    "question": "浙江大学085400电子信息复试阶段招生计划是多少？",
+    "school": "浙江大学",
+    "expectedTexts": ["085400 电子信息 102"],
+    "expectedAnswerTexts": ["085400", "102"]
+  },
+  {
+    "id": "tianjin-polytechnic-study-mode-contrast",
+    "category": "study_mode",
+    "question": "天津工业大学085405全日制和非全日制的目录人数原文分别是什么？",
+    "school": "天津工业大学",
+    "expectedTexts": ["研究方向：44(不含推免)", "研究方向：9(不含推免)"],
+    "expectedAnswerTexts": ["44(不含推免)", "9(不含推免)"]
+  },
+  {
+    "id": "yunnan-major-code-contrast",
+    "category": "same_school_disambiguation",
+    "question": "云南大学081201与081202的研究方向有什么区别？",
+    "school": "云南大学",
+    "expectedTexts": ["高性能计算及可重构计算", "数据库与知识工程"],
+    "expectedAnswerTexts": ["高性能计算及可重构计算", "数据库与知识工程"]
+  },
+  {
+    "id": "pku-knowledge-profile-route",
+    "type": "coverage",
+    "category": "tool_routing",
+    "question": "北京大学知识库收录了哪些年份和资料？",
+    "expectedAnswerTexts": ["北京大学：", "2026", "招生专业目录"],
+    "expectedTrace": ["tool=school_knowledge_profile", "generate:knowledge_profile"]
+  },
+  {
+    "id": "nju-sjtu-parallel-comparison",
+    "category": "multi_school",
+    "question": "比较南京大学和上海交通大学081200的初试科目与招生人数口径。",
+    "schools": ["南京大学", "上海交通大学"],
+    "expectedTexts": ["专业拟招66人", "不能据此推断081200专业级招生人数"],
+    "expectedTargets": [
+      {"text": "专业拟招66人", "school": "南京大学"},
+      {"text": "不能据此推断081200专业级招生人数", "school": "上海交通大学"}
+    ],
+    "expectedAnswerTexts": ["专业拟招66人", "不能据此推断081200专业级招生人数"],
+    "expectedTrace": ["parallel=2"]
+  },
+  {
+    "id": "unknown-uestc-guard",
+    "type": "guard",
+    "category": "unknown_school_guard",
+    "question": "电子科技大学085404的复试线是多少？",
+    "expectedGuard": true,
+    "expectedAnswerText": "不执行跨校推断"
+  },
+  {
+    "id": "zju-missing-year-boundary",
+    "category": "temporal_boundary",
+    "question": "浙江大学2025年081200复试线是多少？",
+    "school": "浙江大学",
+    "expectedText": "382",
+    "expectedAnswerTexts": ["2026", "缺失年份或专业不能据此推断"]
+  }
+]

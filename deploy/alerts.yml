@@ -1,0 +1,71 @@
+groups:
+  - name: cs-kaoyan-service-health
+    rules:
+      - alert: CsKaoyanServiceUnavailable
+        expr: probe_success{job="service-probes"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service health probe failed"
+          description: "{{ $labels.instance }} has failed its HTTP health probe for more than 2 minutes."
+
+      - alert: CsKaoyanBackendHigh5xxRatio
+        expr: |
+          sum(rate(http_server_requests_seconds_count{job="backend",status=~"5.."}[5m]))
+          /
+          clamp_min(sum(rate(http_server_requests_seconds_count{job="backend"}[5m])), 0.001) > 0.05
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Backend 5xx ratio is above 5%"
+          description: "The Spring API has exceeded the 5xx error budget for 10 minutes."
+
+      - alert: CsKaoyanAgentIndexEmpty
+        expr: cs_kaoyan_agent_indexed_chunks == 0
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Private knowledge index is empty"
+          description: "The Agent has reported zero indexed chunks for 10 minutes."
+
+      - alert: CsKaoyanAgentCompletionRatioLow
+        expr: cs_kaoyan_agent_tasks_total >= 5 and cs_kaoyan_agent_task_completion_ratio < 0.8
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Agent task completion ratio is below 80%"
+          description: "The persisted Agent task completion ratio has remained below the quality threshold."
+
+      - alert: CsKaoyanAgentToolSuccessRatioLow
+        expr: cs_kaoyan_agent_tool_calls_total >= 10 and cs_kaoyan_agent_tool_success_ratio < 0.9
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Agent tool success ratio is below 90%"
+          description: "Tool execution reliability has remained below the operational threshold."
+
+      - alert: CsKaoyanJvmHeapPressure
+        expr: |
+          sum(jvm_memory_used_bytes{job="backend",area="heap"})
+          /
+          clamp_min(sum(jvm_memory_max_bytes{job="backend",area="heap"}), 1) > 0.9
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Backend JVM heap usage is above 90%"
+          description: "Sustained heap pressure can cause long GC pauses or process termination."
+
+      - alert: CsKaoyanWebCaptureReviewOverdue
+        expr: cs_kaoyan_web_capture_oldest_pending_age_seconds > 86400
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Official-page content change review is overdue"
+          description: "At least one detected official-page change has waited for human review for more than 24 hours."

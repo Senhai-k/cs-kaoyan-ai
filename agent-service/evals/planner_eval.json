@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "planner-eval-v3",
+  "cases": [
+  {
+    "id": "prioritize-score-line-gap",
+    "maxTargets": 1,
+    "task": {
+      "schoolName": "测试大学",
+      "missingDimensions": ["复试线"],
+      "targets": [
+        {"id": 1, "title": "招生目录", "documentType": "招生专业目录", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/catalog/page.htm", "status": "PENDING"},
+        {"id": 2, "title": "复试分数线", "documentType": "复试分数线", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/score/page.htm", "status": "PENDING"}
+      ]
+    },
+    "expectedTargetIds": [2]
+  },
+  {
+    "id": "exclude-unsafe-and-verified",
+    "maxTargets": 3,
+    "task": {
+      "schoolName": "测试大学",
+      "missingDimensions": ["复试规则"],
+      "targets": [
+        {"id": 10, "title": "学院首页", "documentType": "复试录取细则", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/main.htm", "status": "PENDING"},
+        {"id": 11, "title": "非官网", "documentType": "复试录取细则", "targetYear": 2026, "sourceUrl": "https://example.com/2026/retest.html", "status": "PENDING"},
+        {"id": 12, "title": "已核验细则", "documentType": "复试录取细则", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/verified/page.htm", "status": "VERIFIED"},
+        {"id": 13, "title": "复试细则", "documentType": "复试录取细则", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/retest/page.htm", "status": "PENDING"}
+      ]
+    },
+    "expectedTargetIds": [13]
+  },
+  {
+    "id": "respect-gap-order-and-limit",
+    "maxTargets": 2,
+    "task": {
+      "schoolName": "测试大学",
+      "missingDimensions": ["录取结果", "复试规则", "招生计划"],
+      "targets": [
+        {"id": 20, "title": "招生目录", "documentType": "招生专业目录", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/catalog/page.htm", "status": "PENDING"},
+        {"id": 21, "title": "复试细则", "documentType": "复试录取细则", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/retest/page.htm", "status": "PENDING"},
+        {"id": 22, "title": "拟录取名单", "documentType": "拟录取名单", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/admit/page.htm", "status": "PENDING"}
+      ]
+    },
+    "expectedTargetIds": [22, 21]
+  },
+  {
+    "id": "no-safe-target",
+    "maxTargets": 2,
+    "task": {
+      "schoolName": "测试大学",
+      "missingDimensions": ["官方证据"],
+      "targets": [
+        {"id": 30, "title": "官网首页", "documentType": "官方招生公告", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/index.htm", "status": "PENDING"}
+      ]
+    },
+    "expectedTargetIds": []
+  },
+  {
+    "id": "deduplicate-url-by-gap-priority",
+    "maxTargets": 2,
+    "task": {
+      "schoolName": "测试大学",
+      "missingDimensions": ["复试线", "复试规则"],
+      "targetYears": [2026, 2025],
+      "targets": [
+        {"id": 40, "title": "复试细则", "documentType": "复试录取细则", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/shared/page.htm", "status": "PENDING"},
+        {"id": 41, "title": "复试分数线", "documentType": "复试分数线", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/shared/page.htm#score", "status": "PENDING"}
+      ]
+    },
+    "expectedTargetIds": [41]
+  },
+  {
+    "id": "prefer-requested-year-order",
+    "maxTargets": 1,
+    "task": {
+      "schoolName": "测试大学",
+      "missingDimensions": ["复试线"],
+      "targetYears": [2026, 2025],
+      "targets": [
+        {"id": 42, "title": "2025年复试线", "documentType": "复试分数线", "targetYear": 2025, "sourceUrl": "https://cs.test.edu.cn/2025/score/page.htm", "status": "PENDING"},
+        {"id": 43, "title": "2026年复试线", "documentType": "复试分数线", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/score/page.htm", "status": "PENDING"}
+      ]
+    },
+    "expectedTargetIds": [43]
+  },
+  {
+    "id": "exclude-targets-unrelated-to-gap",
+    "maxTargets": 2,
+    "task": {
+      "schoolName": "测试大学",
+      "missingDimensions": ["复试线"],
+      "targets": [
+        {"id": 44, "title": "招生目录", "documentType": "招生专业目录", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/catalog/page.htm", "status": "PENDING"}
+      ]
+    },
+    "expectedTargetIds": []
+  },
+  {
+    "id": "exclude-credentials-and-nonstandard-port",
+    "maxTargets": 2,
+    "task": {
+      "schoolName": "测试大学",
+      "missingDimensions": ["复试线"],
+      "targets": [
+        {"id": 45, "title": "带凭据URL", "documentType": "复试分数线", "targetYear": 2026, "sourceUrl": "https://user:pass@cs.test.edu.cn/2026/score/page.htm", "status": "PENDING"},
+        {"id": 46, "title": "非标准端口", "documentType": "复试分数线", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn:8443/2026/score/page.htm", "status": "PENDING"},
+        {"id": 47, "title": "安全复试线", "documentType": "复试分数线", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/score/page.htm", "status": "PENDING"}
+      ]
+    },
+    "expectedTargetIds": [47]
+  },
+  {
+    "id": "deduplicate-target-id",
+    "maxTargets": 3,
+    "task": {
+      "schoolName": "测试大学",
+      "missingDimensions": ["复试线"],
+      "targets": [
+        {"id": 48, "title": "复试线A", "documentType": "复试分数线", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/score-a/page.htm", "status": "PENDING"},
+        {"id": 48, "title": "复试线B", "documentType": "复试分数线", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/score-b/page.htm", "status": "PENDING"}
+      ]
+    },
+    "expectedTargetIds": [48]
+  },
+  {
+    "id": "collected-target-remains-actionable",
+    "maxTargets": 1,
+    "task": {
+      "schoolName": "测试大学",
+      "missingDimensions": ["复试规则"],
+      "targets": [
+        {"id": 49, "title": "已采集待核验细则", "documentType": "复试录取细则", "targetYear": 2026, "sourceUrl": "https://cs.test.edu.cn/2026/retest/page.htm", "status": "COLLECTED"}
+      ]
+    },
+    "expectedTargetIds": [49]
+  }
+  ]
+}

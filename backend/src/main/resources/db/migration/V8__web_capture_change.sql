@@ -1,0 +1,22 @@
+CREATE TABLE web_capture_change (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  target_id BIGINT NOT NULL,
+  previous_task_id BIGINT NOT NULL,
+  current_task_id BIGINT NOT NULL,
+  previous_sha256 VARCHAR(64) NOT NULL,
+  current_sha256 VARCHAR(64) NOT NULL,
+  previous_length INT NOT NULL,
+  current_length INT NOT NULL,
+  added_line_count INT NOT NULL,
+  removed_line_count INT NOT NULL,
+  change_ratio DECIMAL(6,4) NOT NULL,
+  previous_excerpt VARCHAR(2000),
+  current_excerpt VARCHAR(2000),
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDING_REVIEW',
+  review_note VARCHAR(500),
+  reviewer VARCHAR(100),
+  detected_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  reviewed_at DATETIME,
+  KEY idx_web_capture_change_status_time (status, detected_at),
+  KEY idx_web_capture_change_target_time (target_id, detected_at)
+);

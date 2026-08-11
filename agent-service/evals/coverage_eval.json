@@ -1,0 +1,90 @@
+[
+  {
+    "id": "valid-official-evidence",
+    "schoolName": "测试大学",
+    "title": "测试大学2026年硕士研究生复试录取细则",
+    "documentType": "复试录取细则",
+    "year": 2026,
+    "sourceUrl": "https://cs.example.edu.cn/2026/retest/page.htm",
+    "rawText": "测试大学2026年硕士研究生复试录取细则，包含复试安排、录取办法和成绩计算规则。",
+    "repeat": 8,
+    "expectedStatus": "VERIFIED"
+  },
+  {
+    "id": "wrong-school",
+    "schoolName": "测试大学",
+    "title": "另一所大学2026年复试录取细则",
+    "documentType": "复试录取细则",
+    "year": 2026,
+    "sourceUrl": "https://cs.example.edu.cn/2026/retest/page.htm",
+    "rawText": "另一所大学2026年硕士研究生复试录取细则，包含复试安排和录取办法。",
+    "repeat": 8,
+    "expectedStatus": "REJECTED"
+  },
+  {
+    "id": "wrong-year",
+    "schoolName": "测试大学",
+    "title": "测试大学2025年复试录取细则",
+    "documentType": "复试录取细则",
+    "year": 2026,
+    "sourceUrl": "https://cs.example.edu.cn/2025/retest/page.htm",
+    "rawText": "测试大学2025年硕士研究生复试录取细则，包含复试安排和录取办法。",
+    "repeat": 8,
+    "expectedStatus": "REJECTED"
+  },
+  {
+    "id": "homepage-url",
+    "schoolName": "测试大学",
+    "title": "测试大学2026年复试录取细则",
+    "documentType": "复试录取细则",
+    "year": 2026,
+    "sourceUrl": "https://cs.example.edu.cn/main.htm",
+    "rawText": "测试大学2026年硕士研究生复试录取细则，包含复试安排和录取办法。",
+    "repeat": 8,
+    "expectedStatus": "REJECTED"
+  },
+  {
+    "id": "non-official-domain",
+    "schoolName": "测试大学",
+    "title": "测试大学2026年复试录取细则",
+    "documentType": "复试录取细则",
+    "year": 2026,
+    "sourceUrl": "https://example.com/2026/retest.html",
+    "rawText": "测试大学2026年硕士研究生复试录取细则，包含复试安排和录取办法。",
+    "repeat": 8,
+    "expectedStatus": "REJECTED"
+  },
+  {
+    "id": "short-content",
+    "schoolName": "测试大学",
+    "title": "测试大学2026年复试录取细则",
+    "documentType": "复试录取细则",
+    "year": 2026,
+    "sourceUrl": "https://cs.example.edu.cn/2026/retest/page.htm",
+    "rawText": "测试大学2026年复试录取细则。",
+    "repeat": 1,
+    "expectedStatus": "REJECTED"
+  },
+  {
+    "id": "wrong-document-type",
+    "schoolName": "测试大学",
+    "title": "测试大学2026年招生专业目录",
+    "documentType": "复试分数线",
+    "year": 2026,
+    "sourceUrl": "https://cs.example.edu.cn/2026/catalog/page.htm",
+    "rawText": "测试大学2026年硕士研究生招生专业目录，包含招生专业、考试科目和研究方向。",
+    "repeat": 8,
+    "expectedStatus": "REJECTED"
+  },
+  {
+    "id": "ambiguous-year-leading-old-scope",
+    "schoolName": "测试大学",
+    "title": "测试大学历史复试说明",
+    "documentType": "复试录取细则",
+    "year": 2026,
+    "sourceUrl": "https://cs.example.edu.cn/2026/retest/history.htm",
+    "rawText": "测试大学2025年硕士研究生复试录取细则，2026年考生仅可参考，包含复试安排和录取办法。",
+    "repeat": 8,
+    "expectedStatus": "REJECTED"
+  }
+]

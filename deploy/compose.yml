@@ -1,0 +1,205 @@
+name: cs-kaoyan-ai
+
+services:
+  mysql:
+    image: ${CONTAINER_REGISTRY:-docker.io}/library/mysql:8.0.37
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$${MYSQL_USER} -p$${MYSQL_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    networks: [private]
+
+  backend:
+    build:
+      context: ../backend
+      args:
+        CONTAINER_REGISTRY: ${CONTAINER_REGISTRY:-docker.io}
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: mysql
+      MYSQL_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+      MYSQL_USERNAME: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_TOKEN_TTL_SECONDS: ${ADMIN_TOKEN_TTL_SECONDS:-86400}
+      ADMIN_SYNC_PASSWORD_ON_STARTUP: "false"
+      AI_PROVIDER: agent
+      AI_AGENT_ENDPOINT: http://agent:18889
+      AGENT_INTERNAL_TOKEN: ${AGENT_INTERNAL_TOKEN}
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-18888}:18888"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:18888/actuator/health/readiness"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    networks: [private]
+
+  agent:
+    build:
+      context: ../agent-service
+      args:
+        CONTAINER_REGISTRY: ${CONTAINER_REGISTRY:-docker.io}
+        PYTORCH_INDEX_URL: ${PYTORCH_INDEX_URL:-https://download.pytorch.org/whl/cpu}
+    restart: unless-stopped
+    environment:
+      AGENT_SERVICE_HOST: 0.0.0.0
+      AGENT_SERVICE_PORT: 18889
+      AGENT_SPRING_BASE_URL: http://backend:18888
+      AGENT_INTERNAL_TOKEN: ${AGENT_INTERNAL_TOKEN}
+      AGENT_DATA_DIR: /app/data
+      AGENT_EMBEDDING_MODEL: /models/bge-small-zh-v1.5
+      AGENT_RERANKER_MODEL: /models/bge-reranker-base
+      AGENT_RERANKER_MODE: feature
+      AGENT_OPENAI_API_KEY: ${AGENT_OPENAI_API_KEY:-}
+      AGENT_OPENAI_BASE_URL: ${AGENT_OPENAI_BASE_URL:-}
+      AGENT_OPENAI_MODEL: ${AGENT_OPENAI_MODEL:-gpt-4.1-mini}
+      AGENT_PLANNER_PRICING_MODE: ${AGENT_PLANNER_PRICING_MODE:-METERED}
+      AGENT_PLANNER_INPUT_COST_PER_MILLION_USD: ${AGENT_PLANNER_INPUT_COST_PER_MILLION_USD:-0}
+      AGENT_PLANNER_OUTPUT_COST_PER_MILLION_USD: ${AGENT_PLANNER_OUTPUT_COST_PER_MILLION_USD:-0}
+      AGENT_OPERATION_MAX_WORKERS: 2
+      AGENT_OPERATION_TIMEOUT_SECONDS: 300
+    volumes:
+      - agent-data:/app/data
+      - ../agent-service/models/bge-small-zh-v1.5:/models/bge-small-zh-v1.5:ro
+      - ../agent-service/models/bge-reranker-base:/models/bge-reranker-base:ro
+    ports:
+      - "127.0.0.1:${AGENT_PORT:-18889}:18889"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:18889/api/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    networks: [private]
+
+  index-sync:
+    image: ${CONTAINER_REGISTRY:-docker.io}/curlimages/curl:8.10.1
+    restart: "no"
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        json_escape() {
+          printf '%s' "$$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+        }
+        username=$$(json_escape "$$ADMIN_USERNAME")
+        password=$$(json_escape "$$ADMIN_PASSWORD")
+        login_response=$$(curl --fail-with-body --silent --show-error \
+          --header 'Content-Type: application/json' \
+          --data "{\"username\":\"$$username\",\"password\":\"$$password\"}" \
+          http://backend:18888/api/auth/login)
+        token=$$(printf '%s' "$$login_response" | sed -n 's/.*"token":"\([^"]*\)".*/\1/p')
+        test -n "$$token" || { echo 'bootstrap login did not return a token' >&2; exit 1; }
+        curl --fail-with-body --silent --show-error \
+          --header "Authorization: Bearer $$token" \
+          --header 'Content-Type: application/json' \
+          --data-binary @/bootstrap/catalog-408-2026.json \
+          http://backend:18888/api/catalog-imports/408 >/dev/null
+        curl --fail-with-body --silent --show-error \
+          --header "Authorization: Bearer $$token" \
+          --header 'Content-Type: application/json' \
+          --data-binary @/bootstrap/self-score-lines-2026-reviewed.json \
+          http://backend:18888/api/catalog-imports/self-score-lines >/dev/null
+        curl --fail-with-body --silent --show-error \
+          --request POST http://agent:18889/api/index/sync
+    environment:
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - ../database/catalog-408-2026.json:/bootstrap/catalog-408-2026.json:ro
+      - ../database/self-score-lines-2026-reviewed.json:/bootstrap/self-score-lines-2026-reviewed.json:ro
+    depends_on:
+      agent:
+        condition: service_healthy
+    networks: [private]
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: frontend/Dockerfile
+      args:
+        CONTAINER_REGISTRY: ${CONTAINER_REGISTRY:-docker.io}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-5173}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks: [private]
+
+  blackbox:
+    image: ${CONTAINER_REGISTRY:-docker.io}/prom/blackbox-exporter:v0.25.0
+    restart: unless-stopped
+    command: ["--config.file=/etc/blackbox/blackbox.yml"]
+    volumes:
+      - ./blackbox.yml:/etc/blackbox/blackbox.yml:ro
+    networks: [private]
+
+  prometheus:
+    image: ${CONTAINER_REGISTRY:-docker.io}/prom/prometheus:v2.54.1
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "127.0.0.1:${PROMETHEUS_PORT:-19090}:9090"
+    depends_on: [backend, agent, frontend, blackbox, alertmanager]
+    networks: [private]
+
+  alertmanager:
+    image: ${CONTAINER_REGISTRY:-docker.io}/prom/alertmanager:v0.27.0
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        umask 077
+        printf '%s\n' "$$ALERT_WEBHOOK_URL" > /tmp/alert-webhook-url
+        exec /bin/alertmanager \
+          --config.file=/etc/alertmanager/alertmanager.yml \
+          --storage.path=/alertmanager
+    environment:
+      ALERT_WEBHOOK_URL: ${ALERT_WEBHOOK_URL:-http://host.docker.internal:19094/alerts}
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager-data:/alertmanager
+    ports:
+      - "127.0.0.1:${ALERTMANAGER_PORT:-19093}:9093"
+    networks: [private]
+
+networks:
+  private:
+
+volumes:
+  mysql-data:
+  agent-data:
+  prometheus-data:
+  alertmanager-data:

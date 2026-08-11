@@ -1,0 +1,26 @@
+route:
+  receiver: local-dashboard
+  group_by: [alertname, severity]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    - receiver: webhook
+      matchers: [alertname="MilestoneFWebhookDrill"]
+      group_wait: 1s
+      group_interval: 1s
+      repeat_interval: 1h
+    - receiver: webhook
+      matchers: [severity=~"warning|critical"]
+
+receivers:
+  - name: local-dashboard
+  - name: webhook
+    webhook_configs:
+      - url_file: /tmp/alert-webhook-url
+        send_resolved: true
+
+inhibit_rules:
+  - source_matchers: [severity="critical"]
+    target_matchers: [severity="warning"]
+    equal: [alertname]

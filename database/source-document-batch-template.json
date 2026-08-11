@@ -1,0 +1,28 @@
+[
+  {
+    "title": "南京大学计算机相关专业资料示例",
+    "documentType": "招生专业目录",
+    "sourceUrl": "https://example.com/replace-with-official-url",
+    "schoolId": 2,
+    "collegeId": 2,
+    "majorId": 2,
+    "year": 2026,
+    "auditStatus": "DRAFT",
+    "sourceReliability": "UNKNOWN",
+    "rawText": "请替换为从学校研究生院或学院官网核验后的资料原文。建议保留专业课科目、招生人数、复试线、复试规则等关键段落。",
+    "remark": "批量导入模板示例，导入前请替换为真实官方来源。"
+  },
+  {
+    "title": "浙江大学计算机相关专业资料示例",
+    "documentType": "招生专业目录",
+    "sourceUrl": "https://example.com/replace-with-official-url",
+    "schoolId": 4,
+    "collegeId": 4,
+    "majorId": 4,
+    "year": 2026,
+    "auditStatus": "DRAFT",
+    "sourceReliability": "UNKNOWN",
+    "rawText": "请替换为从学校研究生院或学院官网核验后的资料原文。导入后系统会自动生成可检索切片。",
+    "remark": "批量导入模板示例，导入前请替换为真实官方来源。"
+  }
+]

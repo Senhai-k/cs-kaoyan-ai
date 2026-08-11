@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS source_document_version (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  document_id BIGINT NOT NULL,
+  version_no INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  document_type VARCHAR(50),
+  source_url VARCHAR(500),
+  school_id BIGINT,
+  college_id BIGINT,
+  major_id BIGINT,
+  year INT,
+  audit_status VARCHAR(20),
+  source_reliability VARCHAR(20),
+  raw_text LONGTEXT,
+  remark VARCHAR(500),
+  operation VARCHAR(20) NOT NULL,
+  operator VARCHAR(100) NOT NULL,
+  source_updated_at DATETIME,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_source_document_version (document_id, version_no),
+  KEY idx_source_document_version_document (document_id, version_no)
+);

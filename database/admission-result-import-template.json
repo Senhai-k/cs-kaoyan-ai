@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "schoolId": 1,
+  "year": 2026,
+  "documentType": "拟录取名单",
+  "sourceId": 1,
+  "remark": "官方拟录取名单匿名结构化批次",
+  "records": [
+    {
+      "candidateRef": "仅在本机临时填写准考证号或名单内唯一序号，生成后不会写入输出文件",
+      "collegeName": "计算机学院",
+      "majorCode": "081200",
+      "majorName": "计算机科学与技术",
+      "degreeType": "学硕",
+      "studyMode": "全日制",
+      "candidateType": "普通计划",
+      "initialScore": null,
+      "retestScore": null,
+      "finalScore": null,
+      "specialProgram": null
+    }
+  ]
+}

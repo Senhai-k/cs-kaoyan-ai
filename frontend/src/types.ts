@@ -1,0 +1,271 @@
+export type School = {
+  id: number;
+  name: string;
+  province: string;
+  city: string | null;
+  schoolLevel: string;
+  is985: boolean;
+  is211: boolean;
+  isDoubleFirstClass: boolean;
+  primarySubject: string | null;
+  is408: boolean | null;
+  latestQuota: number | null;
+  latestScoreLine: number | null;
+};
+
+export type CompareSchoolItem = {
+  id: number;
+  name: string;
+  regionLabel: string;
+  schoolLevel: string;
+  collegeName: string | null;
+  majorName: string | null;
+  degreeType: string | null;
+  primarySubject: string | null;
+  is408: boolean | null;
+  latestQuota: number | null;
+  latestScoreLine: number | null;
+  quotaHistory: YearValue[];
+  scoreLineHistory: YearValue[];
+  officialSourceCount: number;
+  latestSourceUpdatedAt: string | null;
+};
+
+export type YearValue = { year: number; value: number; sourceId: number | null };
+export type NationalScoreLineInfo = { year: number; categoryCode: string; categoryName: string; candidateType: 'A' | 'B'; totalScore: number; score100: number; scoreOver100: number; applicable: boolean; sourceTitle: string; sourceUrl: string; publishedDate: string; remark: string };
+export type SchoolScoreLineInfo = { year: number; categoryCode: string; categoryName: string; degreeType: string; totalScore: number | null; politicsScore: number | null; foreignLanguageScore: number | null; subjectOneScore: number | null; subjectTwoScore: number | null; score100: number | null; scoreOver100: number | null; availabilityStatus: 'AVAILABLE' | 'NOT_PUBLISHED'; sourceId: number | null; sourceTitle: string; articleUrl: string; imageUrl: string | null; publishedDate: string; scopeNote: string; remark: string };
+export type AdmissionPlanInfo = { year: number; totalQuota: number | null; recommendedQuota: number | null; unifiedQuota: number | null; hasAdjustment: boolean | null; sourceId: number | null; remark: string };
+export type SourceInfo = { id: number; title: string; sourceType: string; sourceUrl: string; year: number | null; official: boolean; auditStatus: string; updatedAt: string };
+export type AdmissionResultInfo = { year: number; admittedCount: number | null; lowestScore: number | null; averageScore: number | null; highestScore: number | null; retestRatio: number | null; sourceId: number | null };
+export type RetestRuleInfo = { scopeType: 'SCHOOL' | 'COLLEGE' | 'MAJOR'; year: number; retestTime: string; retestMethod: string; retestRatio: number | null; initialScoreWeight: number | null; retestScoreWeight: number | null; qualificationLine: string; materials: string; sourceId: number | null; remark: string };
+export type ReferenceBookInfo = { year: number; subjectName: string; bookTitle: string; author: string; edition: string; publisher: string; sourceId: number | null; remark: string };
+export type AdjustmentInfoView = { year: number; title: string; open: boolean; vacancyCount: number | null; applicationWindow: string; requirements: string; noticeUrl: string; sourceId: number | null; remark: string };
+export type SchoolProgramInfo = { majorId: number; collegeName: string; majorName: string; majorCode: string; degreeType: string; researchDirection: string; studyMode: string; year: number; politics: string; foreignLanguage: string; mathSubject: string; professionalSubject: string; is408: boolean; sourceId: number | null };
+
+export type SchoolDetail = {
+  summary: School;
+  collegeName: string;
+  majorName: string;
+  majorCode: string;
+  degreeType: string;
+  researchDirection: string;
+  studyMode: string;
+  programs: SchoolProgramInfo[];
+  examSourceId: number | null;
+  quotas: YearValue[];
+  admissionPlans: AdmissionPlanInfo[];
+  scoreLines: YearValue[];
+  nationalScoreLines: NationalScoreLineInfo[];
+  schoolScoreLines: SchoolScoreLineInfo[];
+  admissionResults: AdmissionResultInfo[];
+  retestRules: RetestRuleInfo[];
+  referenceBooks: ReferenceBookInfo[];
+  adjustmentInfos: AdjustmentInfoView[];
+  sources: SourceInfo[];
+};
+
+export type College = { id: number; schoolId: number; name: string; officialSite: string; remark: string };
+export type Major = { id: number; schoolId: number; collegeId: number; name: string; majorCode: string; degreeType: string; researchDirection: string; studyMode: string; remark: string };
+export type AdmissionPlan = { id: number; schoolId: number; collegeId: number; majorId: number; year: number; totalQuota: number | null; recommendedQuota: number | null; unifiedQuota: number | null; hasAdjustment: boolean; sourceId: number | null; remark: string };
+export type ExamSubject = { id: number; schoolId: number; collegeId: number; majorId: number; year: number; politics: string; foreignLanguage: string; mathSubject: string; professionalSubject: string; is408: boolean; sourceId: number | null };
+export type ScoreLine = { id: number; schoolId: number; collegeId: number; majorId: number; year: number; totalScore: number | null; sourceId: number | null; remark: string };
+export type AdmissionResult = { id: number; schoolId: number; collegeId: number; majorId: number; year: number; admittedCount: number | null; lowestScore: number | null; averageScore: number | null; highestScore: number | null; retestRatio: number | null; sourceId: number | null; remark: string };
+export type AdmissionResultImportCandidate = { candidateKey: string; collegeName: string; majorCode: string; majorName: string | null; degreeType: string; studyMode: string; candidateType: string; initialScore: number | null; retestScore: number | null; finalScore: number | null; specialProgram: string | null };
+export type AdmissionResultImportRequest = { schemaVersion: 1; schoolId: number; year: number; documentType: '拟录取名单'; sourceId: number; sourceSha256: string; batchSha256: string; remark: string | null; records: AdmissionResultImportCandidate[] };
+export type AdmissionResultImportGroup = { groupKey: string; collegeName: string; majorCode: string; majorName: string | null; degreeType: string; studyMode: string; candidateType: string; specialProgram: string | null; admittedCount: number; scoreCoverageCount: number; lowestScore: number | null; averageScore: number | null; highestScore: number | null; collegeId: number | null; majorId: number | null; mappingStatus: 'MATCHED' | 'UNMAPPED' | 'AMBIGUOUS' | 'UNSUPPORTED_SCOPE'; mappingMessage: string };
+export type AdmissionResultImportPreview = { inputRecords: number; groupCount: number; mappedGroupCount: number; publishable: boolean; groups: AdmissionResultImportGroup[] };
+export type AdmissionResultImportBatch = { id: number; schoolId: number; year: number; sourceId: number; sourceSha256: string; batchSha256: string; status: 'DRAFT' | 'PUBLISHED'; inputRecords: number; groupCount: number; mappedGroupCount: number; remark: string | null; createdAt: string; updatedAt: string; publishedAt: string | null };
+export type AdmissionResultImportDraft = { batch: AdmissionResultImportBatch; preview: AdmissionResultImportPreview; existing: boolean };
+export type AdmissionResultImportPublishResult = { batchId: number; status: 'PUBLISHED'; admissionResultsCreated: number; existingResults: number };
+export type RetestRule = { id: number; schoolId: number; collegeId: number | null; majorId: number | null; scopeType: 'SCHOOL' | 'COLLEGE' | 'MAJOR'; year: number; retestTime: string; retestMethod: string; retestRatio: number | null; initialScoreWeight: number | null; retestScoreWeight: number | null; qualificationLine: string; materials: string; sourceId: number | null; remark: string };
+export type ReferenceBook = { id: number; schoolId: number; collegeId: number; majorId: number; year: number; subjectName: string; bookTitle: string; author: string; edition: string; publisher: string; sourceId: number | null; remark: string };
+export type AdjustmentInfo = { id: number; schoolId: number; collegeId: number; majorId: number; year: number; title: string; open: boolean; vacancyCount: number | null; applicationWindow: string; requirements: string; noticeUrl: string; sourceId: number | null; remark: string };
+export type DocumentSource = { id: number; title: string; sourceType: string; sourceUrl: string; publishDate: string | null; schoolId: number; collegeId: number | null; year: number | null; official: boolean; auditStatus: string; updatedAt: string; remark: string };
+export type SourceDocument = { id: number; title: string; documentType: string; sourceUrl: string; schoolId: number | null; collegeId: number | null; majorId: number | null; year: number | null; auditStatus: string; sourceReliability: string; rawText: string; remark: string; updatedAt: string };
+export type SourceDocumentVersion = { id: number; documentId: number; versionNo: number; title: string; documentType: string; sourceUrl: string; schoolId: number | null; collegeId: number | null; majorId: number | null; year: number | null; auditStatus: string; sourceReliability: string; rawText: string; remark: string; operation: 'CREATE' | 'BASELINE' | 'UPDATE' | 'ROLLBACK' | 'PUBLISH' | 'BATCH_ROLLBACK'; operator: string; sourceUpdatedAt: string | null; createdAt: string };
+export type SourceDocumentRollbackResult = { document: SourceDocument; restoredVersionNo: number; createdVersionNo: number; chunkCount: number };
+export type DocumentChunk = { id: number; documentId: number; schoolId: number | null; collegeId: number | null; majorId: number | null; year: number | null; documentType: string; chunkIndex: number; content: string; pageNumber: number | null; auditStatus: string; updatedAt: string };
+export type ParsedSourceDocumentDraft = { title: string; documentType: string; rawText: string; remark: string; parseTaskId: number; fileSha256: string; duplicate: boolean; parserVersion: string };
+export type DocumentParseTask = { id: number; fileSha256: string; originalFilename: string; contentType: string | null; fileSize: number; parserType: string; parserVersion: string; status: 'COMPLETED' | 'FAILED'; documentType: string | null; title: string | null; extractedLength: number; reuseCount: number; errorMessage: string | null; operator: string; createdAt: string; updatedAt: string; completedAt: string | null };
+export type WebCaptureDraft = { captureTaskId: number; targetId: number; schoolId: number; title: string; documentType: string; year: number; sourceUrl: string; rawText: string; remark: string; contentSha256: string; duplicate: boolean; extractorVersion: string; changeDetected: boolean; changeId: number | null };
+export type WebCaptureTask = { id: number; targetId: number; requestedUrl: string; finalUrl: string | null; contentSha256: string | null; httpStatus: number | null; contentType: string | null; responseSize: number; extractorVersion: string; status: 'COMPLETED' | 'FAILED'; title: string | null; extractedLength: number; reuseCount: number; errorMessage: string | null; operator: string; createdAt: string; updatedAt: string; completedAt: string | null };
+export type WebCaptureChange = { id: number; targetId: number; previousTaskId: number; currentTaskId: number; previousSha256: string; currentSha256: string; previousLength: number; currentLength: number; addedLineCount: number; removedLineCount: number; changeRatio: number; previousExcerpt: string; currentExcerpt: string; status: 'PENDING_REVIEW' | 'ACKNOWLEDGED' | 'IGNORED'; reviewNote: string | null; reviewer: string | null; detectedAt: string; reviewedAt: string | null };
+export type WebCaptureChangeSummary = { totalCount: number; pendingCount: number; acknowledgedCount: number; ignoredCount: number; averageChangeRatio: number; maxChangeRatio: number; oldestPendingAt: string | null; oldestPendingAgeSeconds: number };
+export type WebCaptureSchedule = { targetId: number; targetTitle: string; sourceUrl: string; enabled: boolean; intervalHours: number; nextRunAt: string; leaseUntil: string | null; lastStartedAt: string | null; lastFinishedAt: string | null; lastStatus: 'RUNNING' | 'COMPLETED' | 'FAILED' | null; lastError: string | null; consecutiveFailures: number; updatedBy: string | null; updatedAt: string };
+export type WebCaptureMonitorRunResult = { claimedCount: number; completedCount: number; failedCount: number; changesDetected: number; targetIds: number[] };
+export type SourceDocumentBatchImportResult = { importedCount: number; chunkCount: number; documentIds: number[] };
+export type DocumentPublicationBatch = { id: number; status: 'PUBLISHED' | 'ROLLED_BACK'; documentCount: number; chunkCount: number; rollbackChunkCount: number | null; reason: string | null; operator: string; rollbackReason: string | null; rollbackOperator: string | null; createdAt: string; completedAt: string | null; rolledBackAt: string | null };
+export type DocumentPublicationBatchResult = { batch: DocumentPublicationBatch; documentIds: number[] };
+export type SourceDocumentQualityIssue = { index: number; level: string; field: string; message: string };
+export type SourceDocumentQualityReport = { totalCount: number; errorCount: number; warningCount: number; importable: boolean; publishable: boolean; issues: SourceDocumentQualityIssue[] };
+export type SourceDocumentRequestLike = { title: string; documentType?: string; sourceUrl?: string; schoolId?: number | null; collegeId?: number | null; majorId?: number | null; year?: number | null; auditStatus?: string; sourceReliability?: string; rawText: string; remark?: string };
+
+export type CompareResult = { schools: CompareSchoolItem[]; riskTips: string[] };
+export type AiExecutionMeta = { provider: string; threadId: string | null; status: string; confidence: number; route: string; retrievalCount: number; trace: string[] };
+export type AiChatResponse = { answer: string; sources: string[]; meta?: AiExecutionMeta | null };
+export type AiConversation = { id: number; question: string; answer: string; relatedSchoolId: number | null; relatedMajorId: number | null; sourceSummary: string; createdAt: string };
+export type AgentMetrics = { totalTasks: number; completedTasks: number; waitingTasks: number; failedTasks: number; toolCalls: number; successfulToolCalls: number; averageLatencyMs: number; taskCompletionRate: number; toolSuccessRate: number };
+export type AgentPlannerLlmStatus = { configured: boolean; experimentReady: boolean; status: string; model: string; endpointType: string; pricingMode: 'METERED' | 'UNMETERED'; missingConfiguration: string[]; pricingUnit: string };
+export type AgentStatus = { available: boolean; status: string; framework: string; capabilities: string[]; indexedChunks: number; embeddingModel: string; rerankerEnabled: boolean; rerankerMode: string; generationMode: string; plannerLlm: AgentPlannerLlmStatus; otlpExporterEnabled: boolean; metrics: AgentMetrics; message: string };
+export type AgentIndexResult = { documents: number; chunks: number; schools: number; collection: string; embedding_model: string };
+export type QualityGateCheck = { metric: string; label: string; comparator: string; threshold: number | string; actual: number | string | null; passed: boolean };
+export type QualityGate = { version: string; status: 'PASSED' | 'FAILED' | 'NOT_APPLICABLE'; passed: boolean; checks: QualityGateCheck[]; failed_checks: QualityGateCheck[] };
+export type EvaluationTargetMatch = { text: string; school: string | null; globalRank: number | null; localRank: number | null; baselineGlobalRank: number | null; baselineLocalRank: number | null; chunkId: number | null; documentId: number | null };
+export type RankingDiagnostic = { globalRank: number; localRank: number; chunkId: number; documentId: number; title: string; school: string | null; vectorScore: number; lexicalScore: number; fusedScore: number; rerankScore: number; matchedTargetIndexes: number[] };
+export type AgentEvaluation = { cases: number; recall_at_5: number; recall_at_1: number; target_recall_at_1: number; hit_rate_at_1: number; baseline_mean_reciprocal_rank_at_5: number; mean_reciprocal_rank_at_5: number; rerank_mrr_lift: number; boundary_safety_rate: number; citation_validity: number; citation_groundedness: number; citation_source_url_rate?: number; answer_support_rate: number; school_scope_accuracy: number; task_completion_rate: number; category_scores: Record<string, number>; failed_case_ids: string[]; quality_gate?: QualityGate; details: Array<{ id: string; category: string; type: string; recall: boolean | null; recallAt1: boolean | null; targetRecallAt1: number | null; relevantRank: number | null; relevantRanks: Array<number | null>; baselineRank: number | null; baselineRanks: Array<number | null>; localRelevantRanks: Array<number | null>; baselineLocalRanks: Array<number | null>; expectedTargets: EvaluationTargetMatch[]; rankingDiagnostics: RankingDiagnostic[]; baselineRankingDiagnostics: RankingDiagnostic[]; guardValid: boolean | null; citationValid: boolean; citationGrounded: boolean; citationSourceUrlValid?: boolean; answerSupported: boolean; schoolScopeValid: boolean; traceValid: boolean; status: string; success: boolean }> };
+export type CoverageWorkflowPlanStep = { target_id: number; title: string; document_type: string; target_year: number; source_url: string; reason: string };
+export type EvidenceVerificationCheck = { name: string; passed: boolean; weight: number; required: boolean; detail: string };
+export type CoverageWorkflowCandidate = { targetId: number; title: string; documentType: string; sourceUrl: string; status: string; contentLength?: number | null; reason?: string | null; qualityScore?: number | null; checks?: EvidenceVerificationCheck[]; evidenceHash?: string | null };
+export type CoverageWorkflow = {
+  status: 'COMPLETED' | 'WAITING_HUMAN' | 'REJECTED' | 'FAILED';
+  thread_id: string;
+  school_name: string;
+  phase: string;
+  planner_mode: string;
+  planner_metadata: PlannerRunMetadata | null;
+  plan: CoverageWorkflowPlanStep[];
+  candidates: CoverageWorkflowCandidate[];
+  rejected_candidates: CoverageWorkflowCandidate[];
+  published: Array<{ documentId: number; chunkCount: number; created: boolean; targetId: number; targetStatus: string }>;
+  index_result: AgentIndexResult | null;
+  evaluation_result: AgentEvaluation | null;
+  trace: string[];
+  review: { reason?: string; school?: string; candidates?: CoverageWorkflowCandidate[]; rejected?: CoverageWorkflowCandidate[] } | null;
+};
+export type CoverageWorkflowRun = { thread_id: string; workflow_type: string; school_name: string; status: string; phase: string; planner_mode: string; plan_count: number; candidate_count: number; rejected_count: number; published_count: number; average_quality_score: number; started_at: string; updated_at: string; completed_at: string | null; error: string; trace: string[] };
+export type CoverageWorkflowMetrics = { total_runs: number; completed_runs: number; waiting_runs: number; rejected_runs: number; failed_runs: number; published_documents: number; average_quality_score: number; completion_rate: number };
+export type CoverageEvaluation = { cases: number; passed: number; accuracy: number; false_accept_rate: number; false_reject_rate: number; quality_gate?: QualityGate; details: Array<{ id: string; expectedStatus: string; actualStatus: string; qualityScore: number; matched: boolean; reason: string }> };
+export type KnowledgeAudit = { total_documents: number; verified_documents: number; rejected_documents: number; pass_rate: number; average_quality_score: number; failure_counts: Record<string, number>; quality_gate?: QualityGate; samples: Array<{ documentId: number; title: string; schoolName: string; status: string; qualityScore: number; reason: string; sourceUrl: string }> };
+export type PlannerRunMetadata = { mode: string; prompt_version: string; prompt_hash: string; model: string; input_tokens: number; output_tokens: number; total_tokens: number; estimated_cost_usd: number | null; usage_status: string; cost_status: string; request_id: string; proposed_target_ids: number[]; guard_rejected_target_ids: number[]; guard_intervention_count: number };
+export type PlannerEvaluationDetail = { id: string; selected_target_ids: number[]; expected_target_ids: number[]; eligible_target_ids: number[]; eligibility_rejections: Array<{ target_id: number | string | null; reason: string; kept_target_id?: number }>; exact_match: boolean; latency_ms: number; plan: { summary: string; steps: CoverageWorkflowPlanStep[] }; metadata: PlannerRunMetadata; replay_input: { task: Record<string, unknown>; max_targets: number } };
+export type PlannerModeEvaluation = { status: 'COMPLETED' | 'SKIPPED' | 'FAILED'; cases: number; completed_cases: number; failed_cases: number; exact_match_rate: number; target_precision: number; target_recall: number; unsafe_selection_rate: number; guard_intervention_rate: number; invalid_proposal_rate: number; guard_intervention_count: number; average_latency_ms: number; prompt_version: string; model: string; input_tokens: number; output_tokens: number; total_tokens: number; usage_coverage_rate: number; estimated_cost_usd: number | null; cost_status: string; details: PlannerEvaluationDetail[]; reason: string };
+export type PlannerEvaluation = { evaluation_id: string; run_type: 'LIVE' | 'REPLAY'; created_at: string; cases: number; dataset_version: string; dataset_hash: string; prompt_version: string; configured_model: string; llm_required: boolean; llm_readiness?: AgentPlannerLlmStatus; deterministic: PlannerModeEvaluation; llm: PlannerModeEvaluation; recommended_mode: 'deterministic' | 'llm'; replay_available: boolean; replay_artifact: string; replayed_from_evaluation_id: string | null; quality_gate?: QualityGate };
+export type RerankerBenchmarkMode = { mode: 'off' | 'feature' | 'cross-encoder'; status: string; duration_ms: number; average_case_latency_ms: number; metrics: Pick<AgentEvaluation, 'recall_at_5' | 'target_recall_at_1' | 'hit_rate_at_1' | 'mean_reciprocal_rank_at_5' | 'citation_source_url_rate' | 'task_completion_rate'>; delta_vs_off: { target_recall_at_1: number; mean_reciprocal_rank_at_5: number; average_case_latency_ms: number }; failed_case_ids: string[]; category_scores: Record<string, number> };
+export type RerankerBenchmark = { benchmark_version: string; created_at: string; cases: number; corpus_chunks: number; dataset_hash: string; corpus_hash: string; completed_modes: number; model_manifest: { model: string; weights_file: string; weights_bytes: number; weights_sha256: string; config_sha256: string }; modes: RerankerBenchmarkMode[]; recommended: { mode: string; reason: string; metrics: RerankerBenchmarkMode['metrics']; average_case_latency_ms: number }; artifact: string; artifact_hash: string; quality_gate?: QualityGate };
+export type OperationType = 'INDEX_SYNC' | 'RAG_EVALUATION' | 'COVERAGE_EVALUATION' | 'KNOWLEDGE_AUDIT' | 'PLANNER_EVALUATION' | 'PLANNER_REPLAY' | 'RERANKER_BENCHMARK';
+export type OperationJob = { id: string; operation_type: OperationType; status: 'QUEUED' | 'RUNNING' | 'CANCEL_REQUESTED' | 'COMPLETED' | 'FAILED' | 'CANCELLED'; progress_current: number; progress_total: number; progress_message: string; attempt: number; parent_job_id: string | null; result: Record<string, unknown> | null; error: string; cancel_requested: boolean; created_at: string; started_at: string | null; updated_at: string; completed_at: string | null; correlation_id: string; trace_id: string; parent_span_id: string | null };
+export type TelemetrySpan = { trace_id: string; span_id: string; parent_span_id: string | null; correlation_id: string; service_name: string; name: string; kind: string; status: 'OK' | 'ERROR'; duration_ms: number; attributes: Record<string, unknown>; error: string; started_at: string };
+export type OperationJobTrace = { job: OperationJob; events: Array<{ event_type: string; detail: string; created_at: string }>; telemetry: { resource: Record<string, string>; trace_id: string; spans: TelemetrySpan[] } | null };
+export type AgentDiagnostic = { id: string; category: 'OPERATION_FAILURE' | 'QUALITY_GATE' | 'PLANNER_FILTER' | 'EVIDENCE_POLICY' | 'KNOWLEDGE_AUDIT' | 'WORKFLOW'; severity: 'ERROR' | 'WARNING' | 'INFO'; title: string; detail: string; timestamp: string; operation_type?: string; job_id?: string; trace_id?: string; workflow_id?: string; school_name?: string; source_url?: string; code?: string };
+export type AgentDiagnostics = { total: number; counts: Record<string, number>; query: string; category: string; severity: string; items: AgentDiagnostic[] };
+export type AdminRole = 'ADMIN' | 'DATA_EDITOR' | 'AUDITOR';
+export type AdminLoginResponse = { token: string; username: string; role: AdminRole; expiresAt: number };
+export type FavoriteGroup = '冲刺' | '稳妥' | '保底';
+export type RecommendationProfile = { targetScore: string; preferredProvinces: string[]; prefer408: 'ANY' | 'ONLY_408' | 'SELF_DESIGNED'; degreeType: string; riskPreference: 'CONSERVATIVE' | 'BALANCED' | 'AGGRESSIVE' };
+export type RecommendationItem = { school: School; matchScore: number; groupTag: FavoriteGroup | '待核验'; riskLevel: string; scoreGap: number | null; benchmarkScore: number | null; officialSourceCount: number; reasons: string[] };
+export type FavoriteSchool = { schoolId: number; name: string; regionLabel: string; schoolLevel: string; primarySubject: string | null; is408: boolean | null; latestQuota: number | null; latestScoreLine: number | null; groupTag: FavoriteGroup; note: string; savedAt: string; noteUpdatedAt?: string };
+export type HomeUpdate = { key: string; title: string; subtitle: string; updatedAt: string; sourceUrl: string };
+export type DetailTab = 'overview' | 'admissions' | 'retest' | 'results' | 'sources';
+
+export type SchoolCoverageItem = {
+  schoolId: number;
+  name: string;
+  province: string;
+  city: string;
+  schoolLevel: string;
+  selfDeterminedScore: boolean;
+  collegeCount: number;
+  majorCount: number;
+  examSubjectCount: number;
+  admissionPlanCount: number;
+  nationalBaselineCount: number;
+  schoolBaselineCount: number;
+  scoreLineCount: number;
+  admissionResultCount: number;
+  retestRuleCount: number;
+  referenceBookCount: number;
+  adjustmentInfoCount: number;
+  officialSourceCount: number;
+  officialDocumentCount: number;
+  coveragePercent: number;
+  missingDimensions: string[];
+  latestVerifiedAt: string | null;
+};
+
+export type DataCoverageReport = {
+  schoolCount: number;
+  averageCoveragePercent: number;
+  readySchoolCount: number;
+  officialSourceCount: number;
+  officialDocumentCount: number;
+  dimensions: Array<{
+    key: string;
+    label: string;
+    coveredSchoolCount: number;
+    totalSchoolCount: number;
+    coveragePercent: number;
+  }>;
+  schools: SchoolCoverageItem[];
+};
+
+export type DataCollectionTask = {
+  schoolId: number;
+  schoolName: string;
+  schoolLevel: string;
+  priority: 'P0' | 'P1' | 'P2';
+  priorityScore: number;
+  coveragePercent: number;
+  targetYears: number[];
+  missingDimensions: string[];
+  recommendedDocumentTypes: string[];
+  reason: string;
+  status: 'OPEN' | 'IN_PROGRESS' | 'BLOCKED' | 'COMPLETED';
+  assignee: string | null;
+  dueDate: string | null;
+  completionCriteria: string;
+  overdue: boolean;
+  officialEntryUrl: string | null;
+  targets: DataCollectionTarget[];
+  history: DataCollectionTaskHistory[];
+  createdAt: string;
+  updatedAt: string;
+  completedAt: string | null;
+};
+
+export type DataCollectionTaskUpdate = Pick<DataCollectionTask, 'status' | 'assignee' | 'dueDate' | 'completionCriteria'>;
+
+export type DataCollectionTarget = {
+  id: number;
+  schoolId: number;
+  title: string;
+  documentType: string;
+  targetYear: number;
+  sourceUrl: string;
+  status: 'PENDING' | 'COLLECTED' | 'VERIFIED';
+  note: string | null;
+  systemGenerated: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type DataCollectionTargetRequest = Pick<DataCollectionTarget, 'title' | 'documentType' | 'targetYear' | 'sourceUrl' | 'status' | 'note'>;
+
+export type OfficialLinkCandidate = {
+  targetId: number;
+  title: string;
+  sourceUrl: string;
+  score: number;
+  matchedKeywords: string[];
+  discoveredFrom: string;
+};
+
+export type DataCollectionTaskHistory = {
+  id: number;
+  schoolId: number;
+  action: string;
+  fromStatus: string | null;
+  toStatus: string | null;
+  operator: string | null;
+  detail: string | null;
+  createdAt: string;
+};
+
+export type Catalog408Status = {
+  year: number;
+  complete: boolean;
+  inputRecords: number;
+  schools: number;
+  retrievedAt: string;
+  importedAt: string;
+  sha256: string;
+};

@@ -1,0 +1,23 @@
+CREATE TABLE document_parse_task (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  file_sha256 VARCHAR(64) NOT NULL,
+  original_filename VARCHAR(255) NOT NULL,
+  content_type VARCHAR(100),
+  file_size BIGINT NOT NULL,
+  parser_type VARCHAR(30) NOT NULL,
+  parser_version VARCHAR(50) NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  document_type VARCHAR(50),
+  title VARCHAR(255),
+  raw_text LONGTEXT,
+  remark VARCHAR(500),
+  extracted_length INT NOT NULL DEFAULT 0,
+  reuse_count INT NOT NULL DEFAULT 0,
+  error_message VARCHAR(1000),
+  operator VARCHAR(100) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  completed_at DATETIME,
+  UNIQUE KEY uk_document_parse_task_hash (file_sha256),
+  KEY idx_document_parse_task_status_time (status, updated_at)
+);
