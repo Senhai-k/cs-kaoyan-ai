@@ -24,6 +24,6 @@
     "@playwright/test": "^1.52.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.6"
   }
 }
