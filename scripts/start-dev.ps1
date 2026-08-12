@@ -1,7 +1,9 @@
 param(
     [switch]$Rebuild,
     [ValidateRange(30, 600)]
-    [int]$AgentReadyTimeoutSeconds = 180
+    [int]$AgentReadyTimeoutSeconds = 180,
+    [ValidateRange(60, 900)]
+    [int]$AgentIndexTimeoutSeconds = 300
 )
 
 $ErrorActionPreference = 'Stop'
@@ -101,7 +103,7 @@ if ($backendOk) {
 
 $agentIndex = $null
 if ($backendOk -and $agentOk) {
-    $agentIndex = Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:$AgentPort/api/index/sync" -TimeoutSec 180
+    $agentIndex = Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:$AgentPort/api/index/sync" -TimeoutSec $AgentIndexTimeoutSeconds
 }
 
 [pscustomobject]@{

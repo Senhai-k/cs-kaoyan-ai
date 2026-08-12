@@ -2,6 +2,43 @@
 
 面向计算机考研择校与资料核验的全栈项目。系统提供院校筛选、推荐、候选备注、年度趋势、对比、证据详情、RAG 问答，以及资料采集、审核、发布、回滚和质量评估。
 
+[![质量门禁](https://github.com/Senhai-k/cs-kaoyan-ai/actions/workflows/quality-gate.yml/badge.svg)](https://github.com/Senhai-k/cs-kaoyan-ai/actions/workflows/quality-gate.yml)
+![Java 17](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white)
+![Spring Boot 3](https://img.shields.io/badge/Spring_Boot-3.3-6DB33F?logo=springboot&logoColor=white)
+![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=111827)
+![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+![LangGraph](https://img.shields.io/badge/Agent-LangGraph-1F2937)
+
+## 项目亮点
+
+| 维度 | 可验证结果 |
+| --- | --- |
+| 数据覆盖 | 397 所院校档案，395 所含 2026 年 408 目录，1830 条目录记录 |
+| 可信问答 | 官方来源 URL、原文片段和检索引用贯穿回答链路 |
+| Agent / RAG | LangGraph 编排，BGE + Qdrant + BM25 混合检索，支持特征重排与 CrossEncoder 基准 |
+| 数据治理 | 采集、解析、草稿、审核、发布、回滚、索引同步和 SHA-256 完整性校验 |
+| 工程质量 | Spring 92 项、Agent 67 项、前端 75 项自动化测试，GitHub Actions 四任务门禁 |
+| 生产能力 | MySQL + Flyway V1-V15、Docker Compose、Prometheus、Alertmanager、OpenTelemetry |
+
+## 系统链路
+
+```mermaid
+flowchart LR
+  U[React 用户工作台] --> B[Spring Boot API]
+  A[React 管理工作台] --> B
+  B --> DB[(H2 / MySQL)]
+  B --> G[LangGraph Agent]
+  G --> R[混合检索与重排]
+  R --> Q[(Qdrant)]
+  R --> BM[BM25]
+  C[官方资料采集] --> D[草稿与质量检查]
+  D --> P[人工审核与发布]
+  P --> DB
+  P --> Q
+```
+
+用户侧负责筛选、推荐、对比和带依据问答；管理侧负责数据采集、审核、版本发布、回滚和 Agent 质量评估。系统坚持“缺失优于虚构”，没有明确证据的数据不进入推荐计算或用户结论。
+
 ## 当前能力
 
 - React 工作台覆盖用户端和管理端，支持桌面、平板和移动端。
@@ -26,6 +63,14 @@
 ### 智能推荐
 
 ![智能推荐](docs/images/recommendations.png)
+
+## 三分钟体验
+
+1. 在“查找院校”中按省份、院校层次、专业类型、408 科目和计划人数筛选学校。
+2. 将候选学校加入清单和对比，查看专业组合、年度数据与官方证据详情。
+3. 在“智能推荐”中调整目标分数、专业类型和风险偏好，观察匹配、可信度与风险说明。
+4. 在“资料问答”中提问，并检查回答是否包含可追溯的官方来源和检索片段。
+5. 进入管理端查看资料草稿、审核发布、版本回滚、覆盖率与 Agent 质量门禁。
 
 当前运行基线包含 397 所学校档案，其中 395 所有 2026 年 408 目录记录；共导入 1830 条研招网目录记录、1876 份已发布文档和 1900 个 Agent 索引切片。`database/catalog-408-2026.json` 已完成项目定义的 17 个计算机核心专业代码全部分页，文件标记为 `complete=true`；该结论不扩展到其他学科或历史年份。
 
@@ -55,6 +100,9 @@ docs/              架构、路线图、验证与数据质量
 - [项目路线图](docs/roadmap.md)：里程碑状态、已交付主线和后续顺序。
 - [验证与数据质量](docs/verification.md)：测试证据、数据边界、验证命令和已知限制。
 - [项目经历](docs/项目经历.md)：用于简历和招聘平台的项目描述。
+- [贡献指南](CONTRIBUTING.md)：开发流程、验证要求与数据安全边界。
+- [安全策略](SECURITY.md)：私密漏洞报告与凭据处置方式。
+- [权利声明](RIGHTS.md)：仓库公开展示与使用授权边界。
 
 ## 快速启动
 
@@ -76,7 +124,7 @@ git clone https://www.modelscope.cn/AI-ModelScope/bge-reranker-base.git .\models
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1 -Rebuild
 ```
 
-本地模型冷启动较慢时，可通过 `-AgentReadyTimeoutSeconds 300` 延长 Agent 就绪等待时间。
+本地模型冷启动较慢时，可通过 `-AgentReadyTimeoutSeconds 300` 延长 Agent 就绪等待时间；首次全量索引较慢时可增加 `-AgentIndexTimeoutSeconds 600`。
 
 访问：`http://127.0.0.1:5173/`
 
@@ -228,3 +276,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
 ```
 
 执行后终端会要求隐藏粘贴浏览器请求头中的 Cookie 值，内容不会显示、写入文件或保留在环境变量中。也可以改用 `-CookieFile "$env:TEMP\chsi.cookies.txt" -DeleteCookieAfterSuccess`。采集器参数可通过 `node .\scripts\catalog\chsi-408-collector.mjs --help` 查看；完整采集未提供登录会话时会在发起网络请求前立即失败。
+
+## 权利声明
+
+本仓库暂未提供开源许可证。代码公开仅用于项目展示、学习交流和技术评估，不表示授予复制、修改、分发、再许可或商业使用权。完整说明见 [RIGHTS.md](RIGHTS.md)。
