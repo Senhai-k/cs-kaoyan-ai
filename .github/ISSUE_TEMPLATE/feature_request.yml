@@ -1,0 +1,30 @@
+name: 功能建议
+description: 提议新的产品能力或工程改进
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 使用场景
+      description: 描述用户遇到的问题，而不只是期望的实现方式。
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案
+    validations:
+      required: true
+  - type: textarea
+    id: data
+    attributes:
+      label: 数据与证据影响
+      description: 说明是否涉及官方来源、数据采集、RAG 索引或个人信息。
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 验收标准
+      description: 列出可以验证完成情况的具体结果。
+    validations:
+      required: true

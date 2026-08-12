@@ -1,0 +1,52 @@
+name: Bug 报告
+description: 报告可复现的功能、数据或部署问题
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 问题描述
+      description: 说明实际行为和预期行为。
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 启动...
+        2. 访问...
+        3. 执行...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: 影响范围
+      options:
+        - 前端
+        - 后端
+        - Agent / RAG
+        - 数据导入与质量
+        - 部署与监控
+        - 文档
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息
+      description: 填写操作系统、Java、Node.js、Python、浏览器或部署方式。
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 日志或截图
+      description: 请先移除 Token、Cookie、密码、个人路径和个人信息。
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: 安全确认
+      options:
+        - label: 我已确认内容中不包含密钥、Cookie、密码或个人信息。
+          required: true
