@@ -13,6 +13,20 @@
 - H2 用于开发，MySQL + Flyway V1-V15 用于生产结构迁移。
 - Prometheus、Alertmanager、OpenTelemetry、备份恢复和故障演练已纳入工程流程。
 
+## 界面展示
+
+### 决策概览
+
+![决策概览](docs/images/overview.png)
+
+### 院校筛选
+
+![院校筛选](docs/images/school-search.png)
+
+### 智能推荐
+
+![智能推荐](docs/images/recommendations.png)
+
 当前运行基线包含 397 所学校档案，其中 395 所有 2026 年 408 目录记录；共导入 1830 条研招网目录记录、1876 份已发布文档和 1900 个 Agent 索引切片。`database/catalog-408-2026.json` 已完成项目定义的 17 个计算机核心专业代码全部分页，文件标记为 `complete=true`；该结论不扩展到其他学科或历史年份。
 
 院校详情会按学院、专业代码、学位类型、学习方式和四门初试科目展示全部已核验 408 组合，并链接对应研招网证据；同一专业的多组研究方向在重复导入时合并去重。
@@ -65,6 +79,12 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1 
 本地模型冷启动较慢时，可通过 `-AgentReadyTimeoutSeconds 300` 延长 Agent 就绪等待时间。
 
 访问：`http://127.0.0.1:5173/`
+
+服务启动后，可重新生成 README 展示图：
+
+```powershell
+node .\scripts\capture-readme-screenshots.mjs
+```
 
 | 服务 | 地址 |
 | --- | --- |

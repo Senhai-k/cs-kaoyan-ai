@@ -16,6 +16,7 @@ $env:ADMIN_PASSWORD = if ($env:ADMIN_PASSWORD) {
 } else {
     "Dev-$([Guid]::NewGuid().ToString('N'))"
 }
+$env:ADMIN_SYNC_PASSWORD_ON_STARTUP = 'true'
 
 function Stop-PortOwner([int]$Port) {
     $pids = @(Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue |
